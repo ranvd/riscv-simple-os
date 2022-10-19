@@ -13,6 +13,9 @@ void start_kernel(void) {
     uart_puts("Hello, RVOS!\n");
 
     page_init();
+
+    int *a = malloc(10);
+    printf("malloc addr: %x\n", a);
     
     while (1) {
 		char a = uart_getc();
