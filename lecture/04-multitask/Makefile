@@ -1,5 +1,10 @@
 include common.mk
 
+vpath %.S asm/
+vpath %.S startup/
+vpath %.c kernel/
+vpath %.c lib/
+
 SRCS_ASM = \
 	start.S \
 	mem.S \
@@ -21,14 +26,14 @@ all: os.elf
 
 # start.o must be the first in dependency!
 os.elf: ${OBJS}
-	${CC} ${CFLAGS} -T os.ld -o os.elf $^
+	${CC} ${CFLAGS} -T os.ld -o os.elf $(addprefix objs/,$^)
 	${OBJCOPY} -O binary os.elf os.bin
 
 %.o : %.c
-	${CC} ${CFLAGS} -c -o $@ $<
+	${CC} ${CFLAGS} -c -I lib/ -I kernel/ -o $(addprefix objs/,$@) $<
 
 %.o : %.S
-	${CC} ${CFLAGS} -c -o $@ $<
+	${CC} ${CFLAGS} -c -I lib/ -I kernel/ -o $(addprefix objs/,$@) $<
 
 run: all
 	@${QEMU} -M ? | grep virt >/dev/null || exit
@@ -49,5 +54,5 @@ code: all
 
 .PHONY : clean
 clean:
-	rm -rf *.o *.bin *.elf
+	rm -rf objs/*.o *.bin *.elf
 
