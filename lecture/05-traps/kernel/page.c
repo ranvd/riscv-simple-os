@@ -91,7 +91,6 @@ void page_init()
 		_clear(page);
 		page++;	
 	}
-	printf("%x\n", page);
 
 	_alloc_start = _align_page(HEAP_START + 8 * PAGE_SIZE);
 	_alloc_end = _alloc_start + (PAGE_SIZE * _num_pages);
@@ -101,7 +100,6 @@ void page_init()
 	printf("DATA:   0x%x -> 0x%x\n", DATA_START, DATA_END);
 	printf("BSS:    0x%x -> 0x%x\n", BSS_START, BSS_END);
 	printf("HEAP:   0x%x -> 0x%x\n", _alloc_start, _alloc_end);
-	printf("HEAP:   0x%x\n", HEAP_START);
 }
 
 /*
