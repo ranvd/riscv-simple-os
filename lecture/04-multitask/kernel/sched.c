@@ -41,10 +41,12 @@ void schedule()
 	switch_to(next);
 }
 
-int task_create(void (*start_routin)(void)){
+int task_create(void (*start_routin)(void), void *param, uint8_t priority){
 	if (_top < MAX_TASKS) {
 		ctx_tasks[_top].sp = (reg_t) &task_stack[_top][STACK_SIZE - 1];
 		ctx_tasks[_top].ra = (reg_t) start_routin;
+		ctx_tasks[_top].param = param;
+		ctx_tasks[_top].priority = priority;
 		_top++;
 		return 0;
 	} else {
