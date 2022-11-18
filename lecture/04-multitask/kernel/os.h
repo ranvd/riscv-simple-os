@@ -22,7 +22,7 @@ extern void page_free(void *p);
 extern void *malloc(size_t size);
 
 /* task management */
-struct context {
+typedef struct context {
 	/* ignore x0 */
 	reg_t ra;
 	reg_t sp;
@@ -55,9 +55,12 @@ struct context {
 	reg_t t4;
 	reg_t t5;
 	reg_t t6;
+	
 	void *param;
 	uint8_t priority;
-};
+	uint8_t id;
+	uint8_t inused;
+} context;
 
 extern int  task_create(void (*task)(void), void *param, uint8_t priority);
 extern void task_exit(void);

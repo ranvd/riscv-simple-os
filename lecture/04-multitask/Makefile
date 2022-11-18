@@ -17,6 +17,8 @@ SRCS_C = \
 	page.c \
 	sched.c \
 	user.c \
+	heap.c \
+
 
 OBJS = $(SRCS_ASM:.S=.o)
 OBJS += $(SRCS_C:.c=.o)

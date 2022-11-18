@@ -124,17 +124,17 @@ char uart_getc(){
 }
 
 /* For Debug used */
-static int uart_puti(char ch){
-	while ((uart_read_reg(LSR) & LSR_TX_IDLE) == 0);
-	int num = ch;
-	int narr[3] = {0};
-	for (int i = 0; i < 3; i++){
-		narr[2-i] = num % 10;
-		num /= 10;
-	}
-	for (int i = 0; i < 3; i++){
-		uart_putc(narr[i]+'0');
-	}
-	uart_putc(' ');
-	return 0;
-}
+// static int uart_puti(char ch){
+// 	while ((uart_read_reg(LSR) & LSR_TX_IDLE) == 0);
+// 	int num = ch;
+// 	int narr[3] = {0};
+// 	for (int i = 0; i < 3; i++){
+// 		narr[2-i] = num % 10;
+// 		num /= 10;
+// 	}
+// 	for (int i = 0; i < 3; i++){
+// 		uart_putc(narr[i]+'0');
+// 	}
+// 	uart_putc(' ');
+// 	return 0;
+// }
