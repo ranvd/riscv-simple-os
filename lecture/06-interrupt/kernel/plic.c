@@ -17,7 +17,7 @@ void plic_init(void)
 	 * the Interrupt ID; interrupts with the lowest ID have the highest 
 	 * effective priority.
 	 */
-	*(uint32_t*)PLIC_PRIORITY(UART0_IRQ) = 1;
+	*(uint32_t*)PLIC_PRIORITY(UART0_IRQ) = 4;
  
 	/*
 	 * Enable UART0

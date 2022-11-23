@@ -84,32 +84,45 @@
 .text
 
 # void switch_to(struct context *next);
-# a0: pointer to the context of the next task
-.globl switch_to
+# a0: pointer to the context of the current task
+# a1: pointer to the context of the next task
+.global switch_to
 .align 4
 switch_to:
-	csrrw	t6, mscratch, t6	# swap t6 and mscratch
-	beqz	t6, 1f			# Notice: previous task may be NULL
-	reg_save t6			# save context of prev task
+	reg_save a0
+	sw	t6, 120(a0)
 
-	# Save the actual t6 register, which we swapped into
-	# mscratch
-	mv	t5, t6		# t5 points to the context of current task
-	csrr	t6, mscratch	# read t6 back from mscratch
-	sw	t6, 120(t5)	# save t6 with t5 as base
-
-1:
-	# switch mscratch to point to the context of the next task
-	csrw	mscratch, a0
-
-	# Restore all GP registers
-	# Use t6 to point to the context of the new task
-	# 因為 t6 是最後一個，如果不使用最後一個，context 恢復到一半位址就跑掉了。
-	mv	t6, a0
+	mv	t6, a1
 	reg_restore t6
 
-	# Do actual context switching.
 	ret
 
-.end
+
+# .globl switch_to
+# .align 4
+# switch_to:
+# 	csrrw	t6, mscratch, t6	# swap t6 and mscratch
+# 	beqz	t6, 1f			# Notice: previous task may be NULL
+# 	reg_save t6			# save context of prev task
+
+# 	# Save the actual t6 register, which we swapped into
+# 	# mscratch
+# 	mv	t5, t6		# t5 points to the context of current task
+# 	csrr	t6, mscratch	# read t6 back from mscratch
+# 	sw	t6, 120(t5)	# save t6 with t5 as base
+
+# 1:
+# 	# switch mscratch to point to the context of the next task
+# 	csrw	mscratch, a0
+
+# 	# Restore all GP registers
+# 	# Use t6 to point to the context of the new task
+# 	# 因為 t6 是最後一個，如果不使用最後一個，context 恢復到一半位址就跑掉了。
+# 	mv	t6, a0
+# 	reg_restore t6
+
+# 	# Do actual context switching.
+# 	ret
+
+# .end
 

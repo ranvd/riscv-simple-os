@@ -17,8 +17,10 @@ SRCS_C = \
 	page.c \
 	sched.c \
 	user.c \
+	heap.c \
 	trap.c \
 	plic.c \
+
 
 OBJS = $(SRCS_ASM:.S=.o)
 OBJS += $(SRCS_C:.c=.o)
@@ -57,5 +59,4 @@ code: all
 .PHONY : clean
 clean:
 	rm -rf objs/*.o *.bin *.elf
-
 

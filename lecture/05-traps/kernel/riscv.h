@@ -66,11 +66,11 @@ static inline reg_t r_mepc()
 /* Machine Scratch register, for early trap handler */
 static inline void w_mscratch(reg_t x)
 {
-	/* 把 reg_t 的值寫到 mscratch 暫存器裡面 */
 	asm volatile("csrw mscratch, %0" : : "r" (x));
 }
 
 /* Machine-mode interrupt vector */
+/* The mtvec represent the where the PC will jump when the interrupt accur */
 static inline void w_mtvec(reg_t x)
 {
 	asm volatile("csrw mtvec, %0" : : "r" (x));

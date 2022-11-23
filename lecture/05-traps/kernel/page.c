@@ -91,8 +91,9 @@ void page_init()
 		_clear(page);
 		page++;	
 	}
+	printf("%x\n", page);
 
-	_alloc_start = _align_page(HEAP_START + 8 * PAGE_SIZE);
+	_alloc_start = _align_page(HEAP_START + 8 * PAGE_SIZE); // The reserved 8 Pages
 	_alloc_end = _alloc_start + (PAGE_SIZE * _num_pages);
 
 	printf("TEXT:   0x%x -> 0x%x\n", TEXT_START, TEXT_END);
@@ -100,6 +101,7 @@ void page_init()
 	printf("DATA:   0x%x -> 0x%x\n", DATA_START, DATA_END);
 	printf("BSS:    0x%x -> 0x%x\n", BSS_START, BSS_END);
 	printf("HEAP:   0x%x -> 0x%x\n", _alloc_start, _alloc_end);
+	printf("HEAP:   0x%x\n", HEAP_START);
 }
 
 /*
@@ -176,6 +178,9 @@ void page_free(void *p)
 
 
 void *malloc(size_t size){
+	/*
+	 * The unit of size is in Bytes
+	 */
     int need_page = (size >> 12) + 1;
     return page_alloc(need_page);
 }

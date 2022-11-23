@@ -1,4 +1,5 @@
-#include "os.h"
+#include "types.h"
+#include "platform.h"
 
 /*
  * The UART control registers are memory-mapped at address UART0. 
@@ -102,12 +103,6 @@ void uart_init()
 	 */
 	lcr = 0;
 	uart_write_reg(LCR, lcr | (3 << 0));
-
-	/*
-	 * enable receive interrupts.
-	 */
-	uint8_t ier = uart_read_reg(IER);
-	uart_write_reg(IER, ier | (1 << 0));
 }
 
 int uart_putc(char ch)
@@ -123,27 +118,23 @@ void uart_puts(char *s)
 	}
 }
 
-int uart_getc(void)
-{
-	if (uart_read_reg(LSR) & LSR_RX_READY){
-		return uart_read_reg(RHR);
-	} else {
-		return -1;
-	}
+char uart_getc(){
+	while((uart_read_reg(LSR) & LSR_RX_READY) == 0);
+	return uart_read_reg(RHR);
 }
 
-/*
- * handle a uart interrupt, raised because input has arrived, called from trap.c.
- */
-void uart_isr(void)
-{
-	while (1) {
-		int c = uart_getc();
-		if (c == -1) {
-			break;
-		} else {
-			uart_putc((char)c);
-			uart_putc('\n');
-		}
-	}
-}
+/* For Debug used */
+// static int uart_puti(char ch){
+// 	while ((uart_read_reg(LSR) & LSR_TX_IDLE) == 0);
+// 	int num = ch;
+// 	int narr[3] = {0};
+// 	for (int i = 0; i < 3; i++){
+// 		narr[2-i] = num % 10;
+// 		num /= 10;
+// 	}
+// 	for (int i = 0; i < 3; i++){
+// 		uart_putc(narr[i]+'0');
+// 	}
+// 	uart_putc(' ');
+// 	return 0;
+// }

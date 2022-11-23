@@ -11,7 +11,7 @@
 /* uart */
 extern int uart_putc(char ch);
 extern void uart_puts(char *s);
-extern int uart_getc(void);
+extern char uart_getc();
 
 /* printf */
 extern int  printf(const char* s, ...);
@@ -20,9 +20,10 @@ extern void panic(char *s);
 /* memory management */
 extern void *page_alloc(int npages);
 extern void page_free(void *p);
+extern void *malloc(size_t size);
 
 /* task management */
-struct context {
+typedef struct context {
 	/* ignore x0 */
 	reg_t ra;
 	reg_t sp;
@@ -55,15 +56,16 @@ struct context {
 	reg_t t4;
 	reg_t t5;
 	reg_t t6;
-};
+	
+	void *param;
+	uint8_t priority;
+	uint8_t id;
+	uint8_t inused;
+} context;
 
-extern int  task_create(void (*task)(void));
+extern int  task_create(void (*task)(void), void *param, uint8_t priority);
+extern void task_exit(void);
 extern void task_delay(volatile int count);
 extern void task_yield();
-
-/* plic */
-extern int plic_claim(void);
-extern void plic_complete(int irq);
-
 
 #endif /* __OS_H__ */

@@ -2,11 +2,13 @@
 #include "heap.h"
 
 /* defined in entry.S */
-extern void switch_to(struct context *next);
+extern void switch_to(struct context *now ,struct context *next);
 
 #define MAX_TASKS 10
 #define STACK_SIZE 1024
 uint8_t task_stack[MAX_TASKS][STACK_SIZE];
+
+struct context os_ctx;
 struct context ctx_tasks[MAX_TASKS];
 struct Arr_Heap prior_q;
 struct context *curr_ctx = NULL;
@@ -37,7 +39,8 @@ void sched_init()
 }
 
 /*
- * implment a simple cycle FIFO schedular
+ * implment as priority scheduling by heap,
+ * this function should be call by OS kernel only.
  */
 void schedule()
 {
@@ -48,10 +51,11 @@ void schedule()
 	// printf("priority: %d\n", next->priority);
 	if(curr_ctx && curr_ctx->inused)
 		heap_push(&prior_q, curr_ctx);
+	
 	curr_ctx = (context*)heap_get(prior_q);
 	printf("id: %d\n", curr_ctx->id);
 	heap_pop(&prior_q);
-	switch_to(curr_ctx);
+	switch_to(&os_ctx, curr_ctx);
 }
 
 int task_create(void (*start_routin)(void), void *param, uint8_t priority){
@@ -78,12 +82,17 @@ int task_create(void (*start_routin)(void), void *param, uint8_t priority){
 void task_exit(){
 	ctx_tasks[curr_ctx->id].inused = 0;
 	printf("Exitting...\n");
-	schedule();
+	task_yield();
 	return;
 }
 
+/* 
+ * this function is for user task 
+ * which want to yield the HART resource 
+ */
 void task_yield(){
-	schedule();
+	switch_to(curr_ctx, &os_ctx);
+	return;
 }
 /*
  * a very rough implementaion, just to consume the cpu

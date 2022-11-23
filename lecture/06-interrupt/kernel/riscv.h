@@ -70,6 +70,7 @@ static inline void w_mscratch(reg_t x)
 }
 
 /* Machine-mode interrupt vector */
+/* The mtvec represent the where the PC will jump when the interrupt accur */
 static inline void w_mtvec(reg_t x)
 {
 	asm volatile("csrw mtvec, %0" : : "r" (x));

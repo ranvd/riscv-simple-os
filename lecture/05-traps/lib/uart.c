@@ -123,7 +123,7 @@ char uart_getc(){
 	return uart_read_reg(RHR);
 }
 
-// /* Debug used */
+/* For Debug used */
 // static int uart_puti(char ch){
 // 	while ((uart_read_reg(LSR) & LSR_TX_IDLE) == 0);
 // 	int num = ch;

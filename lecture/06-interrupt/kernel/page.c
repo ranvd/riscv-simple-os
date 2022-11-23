@@ -85,13 +85,15 @@ void page_init()
 	_num_pages = (HEAP_SIZE / PAGE_SIZE) - 8;
 	printf("HEAP_START = %x, HEAP_SIZE = %x, num of pages = %d\n", HEAP_START, HEAP_SIZE, _num_pages);
 	
+	/* 在 HEAP_START 開始放了一堆管理 page 資訊的結構 */
 	struct Page *page = (struct Page *)HEAP_START;
 	for (int i = 0; i < _num_pages; i++) {
 		_clear(page);
 		page++;	
 	}
+	printf("%x\n", page);
 
-	_alloc_start = _align_page(HEAP_START + 8 * PAGE_SIZE);
+	_alloc_start = _align_page(HEAP_START + 8 * PAGE_SIZE); // The reserved 8 Pages
 	_alloc_end = _alloc_start + (PAGE_SIZE * _num_pages);
 
 	printf("TEXT:   0x%x -> 0x%x\n", TEXT_START, TEXT_END);
@@ -99,6 +101,7 @@ void page_init()
 	printf("DATA:   0x%x -> 0x%x\n", DATA_START, DATA_END);
 	printf("BSS:    0x%x -> 0x%x\n", BSS_START, BSS_END);
 	printf("HEAP:   0x%x -> 0x%x\n", _alloc_start, _alloc_end);
+	printf("HEAP:   0x%x\n", HEAP_START);
 }
 
 /*
@@ -173,17 +176,25 @@ void page_free(void *p)
 	}
 }
 
-void page_test()
-{
-	void *p = page_alloc(2);
-	printf("p = 0x%x\n", p);
-	//page_free(p);
 
-	void *p2 = page_alloc(7);
-	printf("p2 = 0x%x\n", p2);
-	page_free(p2);
-
-	void *p3 = page_alloc(4);
-	printf("p3 = 0x%x\n", p3);
+void *malloc(size_t size){
+	/*
+	 * The unit of size is in Bytes
+	 */
+    int need_page = (size >> 12) + 1;
+    return page_alloc(need_page);
 }
+// void page_test()
+// {
+// 	void *p = page_alloc(2);
+// 	printf("p = 0x%x\n", p);
+// 	//page_free(p);
+
+// 	void *p2 = page_alloc(7);
+// 	printf("p2 = 0x%x\n", p2);
+// 	page_free(p2);
+
+// 	void *p3 = page_alloc(4);
+// 	printf("p3 = 0x%x\n", p3);
+// }
 

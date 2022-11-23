@@ -12,24 +12,30 @@ extern void os_main(void);
 extern void trap_init(void);
 extern void plic_init(void);
 
-void start_kernel(void)
-{
-	uart_init();
-	uart_puts("Hello, RVOS!\n");
 
-	page_init();
+void start_kernel(void) {
+    uart_init();
+    uart_puts("Hello, RVOS!\n");
 
-	trap_init();
+    page_init();
 
-	plic_init();
+    trap_init();
 
-	sched_init();
+    plic_init();
+    
+    sched_init();
 
-	os_main();
+    os_main();
+    while (1) {
+        schedule();
+    }
 
-	schedule();
+    printf("do not show here\n");
+    int *a = malloc(10);
+    printf("malloc addr: %x\n", a);
 
-	uart_puts("Would not go here!\n");
-	while (1) {}; // stop here!
+    while (1) {
+        char a = uart_getc();
+        uart_puts(&a);
+    }; // stop here!
 }
-

@@ -11,6 +11,7 @@ extern void schedule(void);
 extern void os_main(void);
 extern void trap_init(void);
 
+
 void start_kernel(void) {
     uart_init();
     uart_puts("Hello, RVOS!\n");
@@ -22,15 +23,16 @@ void start_kernel(void) {
     sched_init();
 
     os_main();
-
-    schedule();
+    while (1) {
+        schedule();
+    }
 
     printf("do not show here\n");
     int *a = malloc(10);
     printf("malloc addr: %x\n", a);
-    
+
     while (1) {
-		char a = uart_getc();
+        char a = uart_getc();
         uart_puts(&a);
     }; // stop here!
 }
