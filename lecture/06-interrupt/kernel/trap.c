@@ -1,6 +1,7 @@
 #include "os.h"
 
 extern void trap_vector(void);
+extern void uart_isr(void);
 
 void trap_init()
 {
@@ -50,7 +51,7 @@ reg_t trap_handler(reg_t epc, reg_t cause)
 	} else {
 		/* Synchronous trap - exception */
 		printf("Sync exceptions!, code = %d\n", cause_code);
-		panic("OOPS! What can I do!");
+		// panic("OOPS! What can I do!");
 		return_pc += 4;
 	}
 

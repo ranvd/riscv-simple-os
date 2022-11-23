@@ -103,6 +103,12 @@ void uart_init()
 	 */
 	lcr = 0;
 	uart_write_reg(LCR, lcr | (3 << 0));
+
+	/*
+	 * enable receive interrupts.
+	 */
+	uint8_t ier = uart_read_reg(IER);
+	uart_write_reg(IER, ier | (1 << 0));
 }
 
 int uart_putc(char ch)
@@ -118,9 +124,22 @@ void uart_puts(char *s)
 	}
 }
 
-char uart_getc(){
-	while((uart_read_reg(LSR) & LSR_RX_READY) == 0);
+int uart_getc(){
+	if((uart_read_reg(LSR) & LSR_RX_READY) == 0) return -1;
 	return uart_read_reg(RHR);
+}
+
+void uart_isr(void)
+{
+	while (1) {
+		int c = uart_getc();
+		if (c == -1) {
+			break;
+		} else {
+			uart_putc((char)c);
+			uart_putc('\n');
+		}
+	}
 }
 
 /* For Debug used */

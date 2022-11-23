@@ -35,7 +35,7 @@ void start_kernel(void) {
     printf("malloc addr: %x\n", a);
 
     while (1) {
-        char a = uart_getc();
-        uart_puts(&a);
+        int a = uart_getc();
+        uart_puts((char*) &a);
     }; // stop here!
 }

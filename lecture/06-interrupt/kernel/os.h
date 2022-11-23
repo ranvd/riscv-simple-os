@@ -11,7 +11,7 @@
 /* uart */
 extern int uart_putc(char ch);
 extern void uart_puts(char *s);
-extern char uart_getc();
+extern int uart_getc();
 
 /* printf */
 extern int  printf(const char* s, ...);
@@ -67,5 +67,9 @@ extern int  task_create(void (*task)(void), void *param, uint8_t priority);
 extern void task_exit(void);
 extern void task_delay(volatile int count);
 extern void task_yield();
+
+/* plic */
+extern int plic_claim(void);
+extern void plic_complete(int irq);
 
 #endif /* __OS_H__ */
