@@ -35,9 +35,11 @@ os.elf: ${OBJS}
 	${OBJCOPY} -O binary os.elf os.bin
 
 %.o : %.c
+	if [ ! -d "objs" ]; then mkdir objs; fi
 	${CC} ${CFLAGS} -c -I lib/ -I kernel/ -o $(addprefix objs/,$@) $<
 
 %.o : %.S
+	if [ ! -d "objs" ]; then mkdir objs; fi
 	${CC} ${CFLAGS} -c -I lib/ -I kernel/ -o $(addprefix objs/,$@) $<
 
 run: all
