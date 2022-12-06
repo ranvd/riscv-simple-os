@@ -56,6 +56,8 @@ typedef struct context {
 	reg_t t4;
 	reg_t t5;
 	reg_t t6;
+
+	reg_t pc;
 	
 	void *param;
 	uint8_t priority;
@@ -64,9 +66,9 @@ typedef struct context {
 } context;
 
 extern int  task_create(void (*task)(void), void *param, uint8_t priority);
-extern void task_exit(void);
+// extern void task_exit(void);
 extern void task_delay(volatile int count);
-extern void task_yield();
+// extern void task_yield();
 
 /* plic */
 extern int plic_claim(void);
@@ -80,5 +82,21 @@ typedef struct lock
 {
   volatile int locked;
 } lock_t;
+
+extern int basic_lock();
+extern int basic_unlock();
+extern void lock_init(lock_t *lock);
+extern void lock_acquire(lock_t *lock);
+extern void lock_free(lock_t *lock);
+
+/* software timer */
+struct timer{
+	void (*func) (void *arg);
+	void *arg;
+	uint32_t timeout_tick; 
+};
+extern struct timer *timer_create(void (*handler)(void *arg), void *arg, uint32_t timeout);
+extern void timer_delete(struct timer *timer);
+extern inline uint32_t get_tick();
 
 #endif /* __OS_H__ */
