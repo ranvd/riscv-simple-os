@@ -13,7 +13,6 @@ _start:
     bnez    t0, park        # if the hart_id != 0, park it.
 
     # Set all bytes in the BSS section to zero
-    # 其實我不知道為什麼要特別去將 bss section 清成 0，但教學上就是這樣做了。
     la  a0, _bss_start
     la  a1, _bss_end
     bgeu    a0, a1, 2f
