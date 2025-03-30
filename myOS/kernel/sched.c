@@ -44,7 +44,7 @@ void schedule()
 	}
 	// printf("priority: %d\n", next->priority);
 	if(curr_ctx && curr_ctx->state){
-		// curr_ctx->priority--;
+		curr_ctx->priority--;
 		heap_push(&prior_q, curr_ctx);
 	}
 	

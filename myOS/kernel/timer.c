@@ -104,12 +104,12 @@ void timer_delete(struct timer *timer) {
 
 /* this routine should be called in interrupt context (interrupt is disabled) */
 static void timer_check() {
-    if (timer_head == NULL){
+    if (timer_head == NULL || timer_head->func == NULL){
         return;
     }
     timer_head->timeout_tick -= 1;
-
-    while (timer_head->timeout_tick <= 0){
+    // printf("timer_head: %d\n", *(int* )timer_head->arg);
+    while (timer_head && timer_head->timeout_tick <= 0){
         if (timer_head->func){
             timer_head->func(timer_head->arg);
         }

@@ -16,7 +16,7 @@ extern void software_interrupt_init(void);
 
 void start_kernel(void) {
     uart_init();
-    uart_puts("Hello, RVOS!\n");
+    // uart_puts("Hello, RVOS!\n");
 
     page_init();
 

@@ -46,7 +46,7 @@ void software_interrupt() {
     *(uint32_t *)CLINT_MSIP(id) = 1;
 }
 
-reg_t trap_handler(reg_t epc, reg_t cause, struct context *cxt) {
+reg_t trap_handler(reg_t epc, reg_t cause, struct context *cxt, reg_t mtval) {
     reg_t return_pc = epc;
     reg_t cause_code = cause & 0xfff;
     if (cause & 0x80000000) {
@@ -70,7 +70,7 @@ reg_t trap_handler(reg_t epc, reg_t cause, struct context *cxt) {
         }
     } else {
         /* Synchronous trap - exception */
-        printf("Sync exceptions!, code = %d\n", cause_code);
+        printf("Sync exceptions!, code = %d, mtval = %d\n", cause_code, mtval);
         switch (cause_code) {
             case 8:
                 printf("System call from U-mode!: system call no: %d\n",cxt->a7);

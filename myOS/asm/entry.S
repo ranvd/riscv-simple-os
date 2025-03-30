@@ -124,6 +124,7 @@ trap_vector:
 	csrr	a0, mepc # mepc is the pc before trap/interrupt accur.
 	csrr	a1, mcause # indicate the trap/interrupt number
 	csrr	a2, mscratch # context pointer
+	csrr    a3, mtval
 	call	trap_handler
 
 	# trap_handler will return the return address via a0.

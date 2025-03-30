@@ -34,14 +34,17 @@ void user_task0(void)
 void user_task1(void)
 {
 	// int c = 0;
+	int a = 1;
+	int b = 2;
+	int c = 3;
 	printf("in user_task1 \n");
-	if (timer_create(time_fun, NULL, 3)){
+	if (!timer_create(time_fun, &a, 3)){
 		printf("timer_create() faile: timer 3\n");
 	}
-	if (timer_create(time_fun, NULL, 4)){
+	if (!timer_create(time_fun, &b, 4)){
 		printf("timer_create() faile: timer 4\n");
 	}
-	if (timer_create(time_fun, NULL, 5)){
+	if (!timer_create(time_fun, &c, 5)){
 		printf("timer_create() faile: timer 5\n");
 	}
 	uart_puts("Task 1: Created!\n");
@@ -56,7 +59,9 @@ void user_task1(void)
 /* NOTICE: DON'T LOOP INFINITELY IN main() */
 void os_main(void)
 {
-	task_create(user_task0, NULL, 101);
-	task_create(user_task1, NULL, 102);
+	if (task_create(user_task0, NULL, 101) == -1)
+		printf("task1 Fail\n");
+	if (task_create(user_task1, NULL, 100) == -1)
+		printf("task2 Fail\n");
 }
 
